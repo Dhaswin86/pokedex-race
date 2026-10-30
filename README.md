@@ -36,6 +36,6 @@ The **Race view** under the card lists every request, its timing, and whether th
 python3 tools/serve.py 8820
 ```
 
-Then open http://localhost:8820/.
+Then open http://localhost:8820/. The pages use ES modules, so they must be served over HTTP.
 
-Live: https://dhaswin86.github.io/pokedex-race/ The pages use ES modules, so they must be served over HTTP.
+Live: https://dhaswin86.github.io/pokedex-race/
