@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokédex Race</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css?v=3">
+<style>
+  .home { max-width: 760px; }
+  .home .card { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 16px; }
+  .home a.section { display: block; color: inherit; text-decoration: none; }
+  .home a.section:hover { border-color: var(--accent); }
+  .home h2 { margin: 6px 0; }
+  .home ul { padding-left: 18px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top"><h1>Pokédex Race</h1></header>
+<main class="home">
+  <p>A small Pokédex that sends several API requests per selection, some waiting on earlier answers and some running together. Pick one Pokémon, then another before the first finishes, and compare what each version shows.</p>
+  <div class="card">
+    <a class="section" href="broken.html"><span class="badge broken">broken</span><h2>Broken version</h2><p class="muted">Draws every answer the moment it arrives, so a slow, old answer can land on the new Pokémon's card.</p></a>
+    <a class="section" href="fixed.html"><span class="badge fixed">fixed</span><h2>Fixed version</h2><p class="muted">Gives each click a ticket number and ignores answers from older tickets.</p></a>
+  </div>
+  <h3>Try the race</h3>
+  <ul>
+    <li>Click an empty part of the page and press <b>R</b>: it picks Eevee, then Gholdengo 50 ms later.</li>
+    <li>To click by hand, add <code>?slow=1</code> to the address, then click Eevee and Gholdengo about 1 s apart.</li>
+    <li>Other options: <code>fixed.html?cancel=1</code> (cancel old requests), <code>?fail=species</code> (a request fails).</li>
+    <li>Open DevTools → Network to see the requests, and the Race view under the card to see what the page did with each answer.</li>
+  </ul>
+</main>
+</body>
+</html>
