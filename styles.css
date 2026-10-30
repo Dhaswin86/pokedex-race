@@ -66,3 +66,9 @@ header.top .badge { font-size: 11px; padding: 2px 8px; }
 .wf-head { font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--line); }
 .wf-head .wf-track-head { background: none; height: auto; }
 #race-view { overflow-x: auto; }
+
+.mode-switch { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; padding: 3px; background: var(--bg); }
+.mode-switch button { border: 0; border-radius: 99px; padding: 5px 14px; background: transparent; font-weight: 600; color: var(--muted); }
+.mode-switch button[aria-pressed="true"].m-broken { background: var(--bad); color: #fff; }
+.mode-switch button[aria-pressed="true"].m-fixed { background: var(--good); color: #fff; }
+.mode-note { margin: 0; color: var(--muted); font-size: 14px; flex: 1 1 260px; }

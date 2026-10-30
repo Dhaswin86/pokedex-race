@@ -1,19 +1,24 @@
-/* BROKEN VERSION — shows whatever comes back, whenever it comes back. */
+/* BROKEN MODE — shows whatever comes back, whenever it comes back. */
 
-import { timeline } from './common.js?v=3';
-import { loadPokemon, wireUI } from './loader.js?v=3';
+import { timeline } from './common.js?v=4';
+import { loadPokemon } from './loader.js?v=4';
 
-let latestId = 0; // only used to LABEL the log; it never stops anything
+export function createBroken() {
+  let latestId = 0; // only used to LABEL the Race view; it never stops anything
+  let retired = false; // set when the user switches to the other mode
 
-function apply(sel, path, render) {
-  render(); // no check: an old answer can paint over the newer selection
-  timeline.mark(sel, path, sel.id === latestId ? 'applied' : 'stale-applied');
-  return true;
+  function apply(sel, path, render) {
+    if (retired) return false;
+    render(); // no check: an old answer can paint over the newer selection
+    timeline.mark(sel, path, sel.id === latestId ? 'applied' : 'stale-applied');
+    return true;
+  }
+
+  return {
+    select(query, failSpecies) {
+      const sel = { id: ++latestId, name: query };
+      loadPokemon(sel, query, { apply, failSpecies });
+    },
+    retire() { retired = true; },
+  };
 }
-
-function select(query, failSpecies) {
-  const sel = { id: ++latestId, name: query };
-  loadPokemon(sel, query, { apply, failSpecies });
-}
-
-wireUI(select);

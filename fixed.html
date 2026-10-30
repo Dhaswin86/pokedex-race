@@ -1,43 +1,5 @@
 <!doctype html>
-<html lang="en">
-<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pokédex — fixed</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="stylesheet" href="styles.css?v=3">
-</head>
-<body>
-<header class="top">
-  <h1>Pokédex</h1>
-  <span class="badge fixed">fixed</span>
-  <a href="broken.html">broken version →</a>
-</header>
-<main>
-  <div class="controls">
-    <button data-pick="eevee">Eevee</button>
-    <button data-pick="gholdengo">Gholdengo</button>
-    <button data-pick="pikachu">Pikachu</button>
-    <button data-pick="charizard">Charizard</button>
-    <form id="search"><input type="text" name="q" placeholder="name or number, e.g. 25" aria-label="Pokémon name or number"><button>Look up</button></form>
-  </div>
-
-  <div class="card">
-    <section class="section" id="header"><h3>Pokémon</h3><div class="body"><p class="muted">Pick a Pokémon above.</p></div></section>
-    <section class="section" id="species"><h3>Pokédex entry</h3><div class="body"></div></section>
-    <section class="section" id="types"><h3>Type matchups</h3><div class="body"></div></section>
-    <section class="section" id="evolution"><h3>Evolution</h3><div class="body"></div></section>
-    <section class="section" id="item"><h3>Evolution item</h3><div class="body"></div></section>
-    <section class="section" id="where"><h3>Where to find</h3><div class="body"></div></section>
-  </div>
-
-  <section class="log" id="race-view">
-    <h3>Race view <button type="button" id="clear-log">Clear</button></h3>
-    <p class="note">Every request this page sends, in the order it started. The coloured bar is how long it was on the network; the last column says what the page did with the answer.</p>
-    <div class="wf-row wf-head"><span>Selection</span><span>Request</span><span class="wf-track wf-track-head">Timeline</span><span>Start → end</span><span class="wf-status">Status</span><span>What the page did</span></div>
-    <div id="waterfall"></div>
-  </section>
-</main>
-<script type="module" src="fixed.js?v=3"></script>
-</body>
-</html>
+<title>Pokédex</title>
+<script>location.replace('index.html?mode=fixed' + location.search.replace(/^\?/, '&') + location.hash);</script>
+<a href="index.html?mode=fixed">Open the Pokédex</a>
