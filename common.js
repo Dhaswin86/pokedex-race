@@ -71,32 +71,51 @@ const OUTCOME_TEXT = {
   cancelled: 'cancelled',
 };
 
+// The Race view keeps one DOM row per request and updates it in place, so bars can grow
+// smoothly frame by frame instead of the whole list being rebuilt.
 function draw() {
   const box = $('#waterfall');
   if (!box) return;
+  if (!rows.length) { box.replaceChildren(); return; }
   const max = Math.max(4000, ...rows.map((r) => r.end ?? now()));
-  box.innerHTML = rows.map((r) => {
-    const left = (r.start / max) * 100;
-    const width = Math.max(0.6, (((r.end ?? now()) - r.start) / max) * 100);
-    return `<div class="wf-row out-${r.outcome}">
-      <span class="wf-sel sel-${r.sel.id % 4}">#${r.sel.id} ${r.sel.name}</span>
-      <span class="wf-path" title="${r.path}">${r.path}</span>
-      <span class="wf-track"><span class="wf-bar sel-${r.sel.id % 4}" style="left:${left}%;width:${width}%"></span></span>
-      <span class="wf-time">${r.start}→${r.end ?? '…'} ms</span>
-      <span class="wf-status">${r.status}</span>
-      <span class="wf-outcome">${OUTCOME_TEXT[r.outcome]}</span>
-    </div>`;
-  }).join('');
+  for (const r of rows) {
+    if (!r.el) {
+      r.el = document.createElement('div');
+      r.el.innerHTML = `
+        <span class="wf-sel sel-${r.sel.id % 4}">#${r.sel.id} ${r.sel.name}</span>
+        <span class="wf-path" title="${r.path}">${r.path}</span>
+        <span class="wf-track"><span class="wf-bar sel-${r.sel.id % 4}"></span></span>
+        <span class="wf-time"></span><span class="wf-status"></span><span class="wf-outcome"></span>`;
+      box.append(r.el);
+    }
+    r.el.className = `wf-row out-${r.outcome}`;
+    const bar = r.el.querySelector('.wf-bar');
+    bar.style.left = `${(r.start / max) * 100}%`;
+    bar.style.width = `${Math.max(0.6, (((r.end ?? now()) - r.start) / max) * 100)}%`;
+    r.el.querySelector('.wf-time').textContent = `${r.start}→${r.end ?? '…'} ms`;
+    r.el.querySelector('.wf-status').textContent = r.status;
+    r.el.querySelector('.wf-outcome').textContent = OUTCOME_TEXT[r.outcome];
+  }
 }
-setInterval(() => { if (rows.some((r) => r.end === null)) draw(); }, 100);
+(function tick() {
+  if (rows.some((r) => r.end === null)) draw();
+  requestAnimationFrame(tick);
+})();
 
 /* ---------- Card sections ---------- */
 
 function fill(section, sel, html) {
   const el = $(`#${section}`);
   el.classList.remove('loading', 'error');
-  el.querySelector('.body').innerHTML = html;
+  const body = el.querySelector('.body');
+  body.innerHTML = html;
+  body.classList.remove('reveal');
+  void body.offsetWidth; // restart the fade-in when a panel is filled again
+  body.classList.add('reveal');
 }
+
+// Sprites fade in once they have actually loaded, instead of popping in.
+document.addEventListener('load', (e) => { if (e.target.tagName === 'IMG') e.target.classList.add('loaded'); }, true);
 
 /** Highlights the button of what the user picked last (nothing for a typed search). */
 export function showSelected(sel) {

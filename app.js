@@ -2,10 +2,10 @@
    The request plan (loader.js) and drawing (common.js) are shared; the only thing the
    switch changes is which `apply` guard decides if an answer may touch the page. */
 
-import { timeline, clearCard } from './common.js?v=4';
-import { wireUI, options } from './loader.js?v=4';
-import { createBroken } from './broken.js?v=4';
-import { createFixed } from './fixed.js?v=4';
+import { timeline, clearCard } from './common.js?v=5';
+import { wireUI, options } from './loader.js?v=5';
+import { createBroken } from './broken.js?v=5';
+import { createFixed } from './fixed.js?v=5';
 
 const MODES = {
   broken: { create: createBroken, note: 'Draws every answer as soon as it arrives, even after you have picked another Pokémon.' },

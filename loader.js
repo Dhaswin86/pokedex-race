@@ -6,7 +6,7 @@ import {
   fetchJSON, clearCard, showSelected, showError, timeline, evolutionItem,
   renderHeader, renderSpecies, renderTypes, renderEvolution, renderItem, renderNoItem,
   renderLocation, renderNotWild,
-} from './common.js?v=4';
+} from './common.js?v=5';
 
 const idFromUrl = (url) => url.split('/').filter(Boolean).pop();
 const isAbort = (err) => err.name === 'AbortError';

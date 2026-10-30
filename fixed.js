@@ -1,7 +1,7 @@
 /* FIXED MODE — everything on screen must belong to the most recent selection. */
 
-import { timeline } from './common.js?v=4';
-import { loadPokemon, options } from './loader.js?v=4';
+import { timeline } from './common.js?v=5';
+import { loadPokemon, options } from './loader.js?v=5';
 
 export function createFixed() {
   // Every click gets a new ticket number. Only the newest ticket may change the page.
