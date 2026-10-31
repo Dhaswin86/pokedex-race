@@ -99,3 +99,16 @@ html[data-mode="fixed"] .mode-switch::before { transform: translateX(100%); back
   *, *::before { animation: none !important; transition: none !important; }
   .section img { opacity: 1; transform: none; }
 }
+
+/* ---------- Race test + "which Pokémon is this panel from" ---------- */
+.race-test { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 10px; font-size: 14px; color: #555; }
+#race-test { background: #1c2233; color: #fff; border-color: #1c2233; font-weight: 600; }
+#race-test:hover { background: #2d3550; }
+.verdict { min-height: 1.4em; margin: 0 0 12px; padding: 0; border-radius: 10px; font-weight: 600; transition: background-color .3s ease, color .3s ease; }
+.verdict.good, .verdict.bad { padding: 10px 14px; }
+.verdict.good { background: #e3f5e8; color: #17692f; }
+.verdict.bad { background: #fde4e0; color: #a3200b; }
+.section h3 .from { float: right; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: #e3f5e8; color: #17692f; text-transform: none; letter-spacing: 0; }
+.section.stale { border-color: #e3350d; box-shadow: 0 0 0 2px rgba(227, 53, 13, .25); }
+.section.stale h3 .from { background: #e3350d; color: #fff; }
+.section.stale h3 .from::before { content: '⚠ '; }

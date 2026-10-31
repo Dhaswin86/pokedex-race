@@ -44,7 +44,8 @@ export const timeline = {
 export async function fetchJSON(path, sel, signal) {
   const row = timeline.start(sel, path);
   try {
-    if (SLOW_MS) await new Promise((r) => setTimeout(r, SLOW_MS));
+    const wait = SLOW_MS + (sel.lag || 0); // sel.lag: the Race test puts the first pick on a slow network
+    if (wait) await new Promise((r) => setTimeout(r, wait));
     const res = await fetch(API + path, { signal });
     row.end = now(); row.status = res.status; draw();
     if (!res.ok) {
@@ -82,7 +83,7 @@ function draw() {
     if (!r.el) {
       r.el = document.createElement('div');
       r.el.innerHTML = `
-        <span class="wf-sel sel-${r.sel.id % 4}">#${r.sel.id} ${r.sel.name}</span>
+        <span class="wf-sel sel-${r.sel.id % 4}">#${r.sel.id} ${r.sel.name}${r.sel.lag ? ' 🐢' : ''}</span>
         <span class="wf-path" title="${r.path}">${r.path}</span>
         <span class="wf-track"><span class="wf-bar sel-${r.sel.id % 4}"></span></span>
         <span class="wf-time"></span><span class="wf-status"></span><span class="wf-outcome"></span>`;
@@ -104,9 +105,18 @@ function draw() {
 
 /* ---------- Card sections ---------- */
 
+// Which selection the user picked last. Every panel is labelled with the selection its data
+// came from, so data from an older click stands out in red.
+let picked = null;
+
 function fill(section, sel, html) {
   const el = $(`#${section}`);
   el.classList.remove('loading', 'error');
+  let tag = el.querySelector('h3 .from');
+  if (!tag) { tag = document.createElement('span'); tag.className = 'from'; el.querySelector('h3').append(tag); }
+  tag.textContent = pretty(sel.name);
+  el.classList.toggle('stale', !!picked && sel.name !== picked.name);
+  showVerdict();
   const body = el.querySelector('.body');
   body.innerHTML = html;
   body.classList.remove('reveal');
@@ -119,14 +129,37 @@ document.addEventListener('load', (e) => { if (e.target.tagName === 'IMG') e.tar
 
 /** Highlights the button of what the user picked last (nothing for a typed search). */
 export function showSelected(sel) {
+  picked = sel;
   document.querySelectorAll('[data-pick]').forEach((b) => b.classList.toggle('active', b.dataset.pick === sel.name));
 }
 
 export function clearCard() {
   for (const el of document.querySelectorAll('.section')) {
-    el.classList.remove('error');
+    el.classList.remove('error', 'stale');
     el.classList.add('loading');
+    el.querySelector('h3 .from')?.remove();
     el.querySelector('.body').innerHTML = '<div class="skeleton"></div><div class="skeleton short"></div>';
+  }
+  showVerdict();
+}
+
+/** Mode switch: nothing is picked any more. */
+export function forgetPick() { picked = null; showVerdict(); }
+
+/** The banner above the card: does everything on screen belong to what the user picked? */
+function showVerdict() {
+  const box = $('#verdict');
+  if (!box) return;
+  const shown = [...document.querySelectorAll('.section h3 .from')];
+  const wrong = shown.filter((t) => t.closest('.section').classList.contains('stale'));
+  if (!picked || !shown.length) { box.className = 'verdict'; box.textContent = picked ? `Loading ${pretty(picked.name)}…` : ''; return; }
+  if (wrong.length) {
+    const from = [...new Set(wrong.map((t) => t.textContent))].join(', ');
+    box.className = 'verdict bad';
+    box.textContent = `⚠ Wrong Pokémon: you picked ${pretty(picked.name)}, but ${wrong.length} of ${shown.length} panels show ${from}.`;
+  } else {
+    box.className = 'verdict good';
+    box.textContent = `✓ Correct: all ${shown.length} panels shown belong to ${pretty(picked.name)}.`;
   }
 }
 

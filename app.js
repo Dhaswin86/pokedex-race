@@ -2,10 +2,10 @@
    The request plan (loader.js) and drawing (common.js) are shared; the only thing the
    switch changes is which `apply` guard decides if an answer may touch the page. */
 
-import { timeline, clearCard } from './common.js?v=5';
-import { wireUI, options } from './loader.js?v=5';
-import { createBroken } from './broken.js?v=5';
-import { createFixed } from './fixed.js?v=5';
+import { timeline, clearCard, forgetPick } from './common.js?v=6';
+import { wireUI, options } from './loader.js?v=6';
+import { createBroken } from './broken.js?v=6';
+import { createFixed } from './fixed.js?v=6';
 
 const MODES = {
   broken: { create: createBroken, note: 'Draws every answer as soon as it arrives, even after you have picked another Pokémon.' },
@@ -34,6 +34,7 @@ function switchMode(name) {
 
   timeline.reset();
   clearCard();
+  forgetPick();
   document.querySelector('#header .body').innerHTML = '<p class="muted">Pick a Pokémon above.</p>';
   for (const id of ['species', 'types', 'evolution', 'item', 'where']) document.querySelector(`#${id} .body`).innerHTML = '';
   document.querySelectorAll('[data-pick]').forEach((b) => b.classList.remove('active'));
@@ -42,4 +43,4 @@ function switchMode(name) {
 
 document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => switchMode(b.dataset.mode)));
 showMode();
-wireUI((query, failSpecies) => mode.select(query, failSpecies));
+wireUI((query, failSpecies, lag) => mode.select(query, failSpecies, lag));
