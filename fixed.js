@@ -1,7 +1,7 @@
 /* FIXED MODE — everything on screen must belong to the most recent selection. */
 
-import { timeline } from './common.js?v=6';
-import { loadPokemon, options } from './loader.js?v=6';
+import { timeline } from './common.js?v=5';
+import { loadPokemon, options } from './loader.js?v=5';
 
 export function createFixed() {
   // Every click gets a new ticket number. Only the newest ticket may change the page.
@@ -24,8 +24,8 @@ export function createFixed() {
   }
 
   return {
-    select(query, failSpecies, lag) {
-      const sel = { id: ++currentId, name: query, lag }; // new ticket → every older ticket is now stale
+    select(query, failSpecies) {
+      const sel = { id: ++currentId, name: query }; // new ticket → every older ticket is now stale
 
       // Optional extra: cancel the old requests still on the network (shown as "cancelled").
       // The guard above is what guarantees correctness; this only saves bandwidth.

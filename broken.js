@@ -1,7 +1,7 @@
 /* BROKEN MODE — shows whatever comes back, whenever it comes back. */
 
-import { timeline } from './common.js?v=6';
-import { loadPokemon } from './loader.js?v=6';
+import { timeline } from './common.js?v=5';
+import { loadPokemon } from './loader.js?v=5';
 
 export function createBroken() {
   let latestId = 0; // only used to LABEL the Race view; it never stops anything
@@ -15,8 +15,8 @@ export function createBroken() {
   }
 
   return {
-    select(query, failSpecies, lag) {
-      const sel = { id: ++latestId, name: query, lag };
+    select(query, failSpecies) {
+      const sel = { id: ++latestId, name: query };
       loadPokemon(sel, query, { apply, failSpecies });
     },
     retire() { retired = true; },

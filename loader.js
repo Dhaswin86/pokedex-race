@@ -6,7 +6,7 @@ import {
   fetchJSON, clearCard, showSelected, showError, timeline, evolutionItem,
   renderHeader, renderSpecies, renderTypes, renderEvolution, renderItem, renderNoItem,
   renderLocation, renderNotWild,
-} from './common.js?v=6';
+} from './common.js?v=5';
 
 const idFromUrl = (url) => url.split('/').filter(Boolean).pop();
 const isAbort = (err) => err.name === 'AbortError';
@@ -114,12 +114,7 @@ export const options = new URLSearchParams(location.search);
 
 export function wireUI(select) {
   const failSpecies = options.get('fail') === 'species';
-  const go = (q, lag) => select(String(q).trim().toLowerCase(), failSpecies, lag);
-
-  // Race test: pick Eevee on a slow network (+1 s per request), then Gholdengo 50 ms later.
-  // Eevee's answers are now guaranteed to arrive AFTER Gholdengo's: the out-of-order case.
-  const raceTest = () => { timeline.reset(); go('eevee', 1000); setTimeout(() => go('gholdengo'), 50); };
-  document.querySelector('#race-test')?.addEventListener('click', raceTest);
+  const go = (q) => select(String(q).trim().toLowerCase(), failSpecies);
 
   document.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () => go(b.dataset.pick)));
   document.querySelector('#search').addEventListener('submit', (e) => {
@@ -130,8 +125,11 @@ export function wireUI(select) {
 
   document.querySelector('#clear-log')?.addEventListener('click', () => timeline.reset());
 
-  // Keyboard shortcut for the same test.
+  // Hidden shortcut for the demo: press R to pick Eevee (slow) and then Gholdengo (fast) 50 ms later.
   document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'r' && !e.target.matches('input')) raceTest();
+    if (e.key.toLowerCase() !== 'r' || e.target.matches('input')) return;
+    timeline.reset();
+    go('eevee');
+    setTimeout(() => go('gholdengo'), 50);
   });
 }

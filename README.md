@@ -23,9 +23,7 @@ The three branches run in parallel after the first request.
 
 ## Try it
 
-- Press **▶ Race test** (or **R**): Eevee on a slow network (+1 s per request), then Gholdengo 50 ms later.
-  Eevee's answers always arrive last. Broken ends with every panel showing Eevee (red tags, red banner); Fixed ignores them and shows only Gholdengo (green).
-- Each panel is tagged with the Pokémon its data came from; a tag turns red when it is not the one you picked.
+- Click an empty part of the page and press **R**: Eevee, then Gholdengo 50 ms later.
 - `?slow=1` adds 1.5 s before every request so the race can be triggered by clicking.
 - `?mode=fixed&cancel=1` also aborts old requests (shown as `(canceled)` in DevTools → Network).
 - `?fail=species` makes the species request 404 to show partial failure.
